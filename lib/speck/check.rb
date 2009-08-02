@@ -1,0 +1,25 @@
+class Speck
+  ##
+  # Represents a queued thing to be checked of some sort, within a `Speck`.
+  class Check
+    ##
+    # A block to be executed.
+    attr_accessor :check
+    
+    ##
+    # A description for the check. Usually a relevant line of code.
+    attr_accessor :description
+    
+    def initialize(check, description = "<undocumented>")
+      @check = check
+      @description = description
+    end
+    
+    ##
+    # Executes this `Check`, raising an error if the block returns nil or
+    # false.
+    def execute
+      raise Exception::CheckFailed unless @check.call
+    end
+  end
+end
