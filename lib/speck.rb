@@ -54,7 +54,7 @@ class Speck
   end
   
   ##
-  # Executes the `Speck`, and subsequently executes any `Check`s.
+  # Executes the `Speck`.
   def execute
     Speck::prepare
     
