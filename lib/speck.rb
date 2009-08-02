@@ -51,6 +51,8 @@ class Speck
   def initialize *targets, &speck
     @speck = speck
     @parent = Speck.current
+    
+    @parent.children << self if @parent
   end
   
   ##
