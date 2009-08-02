@@ -1,3 +1,3 @@
 Speck
 =====
-Spec’s… supah–light.
+Specs… supah–light.
