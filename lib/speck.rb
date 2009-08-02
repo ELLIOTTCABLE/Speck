@@ -19,6 +19,13 @@ class Speck
     def current
       stack.last
     end
+    
+    ##
+    # Prepares `Speck` for use (currently only monkey–patches `Object` with
+    # `Speck::ObjectMixins`)
+    def prepare
+      ::Object.send :include, Speck::ObjectMixins
+    end
   end
   
   ##
@@ -49,6 +56,8 @@ class Speck
   ##
   # Executes the `Speck`, and subsequently executes any `Check`s.
   def execute
+    Speck::prepare
+    
     Speck.stack << self
     speck.call
     Speck.stack.pop
