@@ -42,5 +42,33 @@ class Speck
       end
     end
     
+    module Proc; Target = ::Proc
+      
+      ##
+      # This method is responsible for checking that a particular proc raises
+      # a particular exception type when called.
+      def check_exception exception = Exception
+        # TODO: Should we allow specks in the root environment? Could be useful
+        #       for quick checks…
+        raise Exception::NoEnvironment unless Speck.current
+        
+        file, line, _ = Kernel::caller.first.split(':')
+        source = File.open(file).readlines[line.to_i - 1]
+        source.strip!
+        source = source.partition(".check_exception").first
+        # TODO: Get rid of the "->{…}" around the resulting string.
+        
+        Speck.current.checks <<
+          Speck::Check.new(->(){
+            begin
+              self.call
+            rescue exception
+              return true
+            end
+            return false
+          }, source)
+      end
+      
+    end
   end
 end
