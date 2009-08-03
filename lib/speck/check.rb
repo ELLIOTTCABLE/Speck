@@ -30,6 +30,11 @@ class Speck
       
       Check.new(->{true}).execute.success?.check
       Check.new(->{object}).execute.success?.check
+      
+      Check.new(->{false}).tap {|c| c.execute rescue nil } .status
+        .check {|s| s == false}
+      Check.new(->{nil}).tap {|c| c.execute rescue nil } .status
+        .check {|s| s == false}
     end
     
     def initialize(lambda, description = "<undocumented>")
@@ -48,7 +53,7 @@ class Speck
     # Executes this `Check`, raising an error if the block returns nil or
     # false.
     def execute
-      @status = @lambda.call
+      @lambda.call.tap {|result| @status = result ? result : false }
       raise Exception::CheckFailed unless success?
       self
     end
