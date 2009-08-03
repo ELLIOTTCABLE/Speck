@@ -4,6 +4,12 @@ require 'speck/check'
 class Speck
   
   class <<self
+    
+    ##
+    # All defined Specks.
+    attr_accessor :specks
+    def specks; @specks ||= Array.new; end
+    
     ##
     # The current stack of nested `Speck`s.
     # 
@@ -53,6 +59,7 @@ class Speck
     @parent = Speck.current
     
     @parent.children << self if @parent
+    Speck.specks << self
   end
   
   ##
