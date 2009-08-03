@@ -27,14 +27,15 @@ class Speck
       def check &check
         check = ->(_){self} unless block_given?
         
+        # TODO: Should we allow specks in the root environment? Could be useful
+        #       for quick checks…
+        raise Exception::NoEnvironment unless Speck.current
+        
         file, line, _ = Kernel::caller.first.split(':')
         source = File.open(file).readlines[line.to_i - 1]
         source.strip!
         source = source.partition(".check").first
         
-        # TODO: Should we allow specks in the root environment? Could be useful
-        #       for quick checks…
-        raise Exception::NoEnvironment unless Speck.current
         Speck.current.checks <<
           Speck::Check.new(->(){ check[self] }, source)
       end
