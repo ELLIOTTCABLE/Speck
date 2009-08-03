@@ -10,6 +10,27 @@ class Speck
     # A description for the check. Usually a relevant line of code.
     attr_accessor :description
     
+    ##
+    # The status of the `Check`. `nil` indicates the `Check` hasn’t been
+    # executed, and `true` or `false` indicate the success of the latest
+    # execution.
+    attr_accessor :status
+    
+    ##
+    # Checks the truthiness of this `Check`’s `status`.
+    def success?
+      !!status
+    end
+    Speck.new :status do
+      Check.new(->{true}).execute.status
+        .check {|s| s == true}
+      Check.new(->{42}).execute.status
+        .check {|s| s == 42}
+      
+      Check.new(->{true}).execute.success?.check
+      Check.new(->{42}).execute.success?.check
+    end
+    
     def initialize(lambda, description = "<undocumented>")
       @lambda = lambda
       @description = description
@@ -26,11 +47,12 @@ class Speck
     # Executes this `Check`, raising an error if the block returns nil or
     # false.
     def execute
-      @lambda.call.tap {|succeeded| raise Exception::CheckFailed unless succeeded }
+      @status = @lambda.call
+      raise Exception::CheckFailed unless success?
       self
     end
     Speck.new :execute do
-      Check.new(->{true}).execute.check
+      Check.new(->{true}).execute.check {|c| c.success? }
       ->{ Check.new(->{false}).execute }
         .check_exception Speck::Exception::CheckFailed
       
