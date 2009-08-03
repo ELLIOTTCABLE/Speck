@@ -81,6 +81,7 @@ class Speck
   def playback
     execute
     checks.each {|c| puts "`#{c.description}`"; c.execute }
+    children.each &:playback
   end
   
   
