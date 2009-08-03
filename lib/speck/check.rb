@@ -27,6 +27,7 @@ class Speck
     # false.
     def execute
       @lambda.call.tap {|succeeded| raise Exception::CheckFailed unless succeeded }
+      self
     end
     Speck.new :execute do
       Check.new(->{true}).execute.check
