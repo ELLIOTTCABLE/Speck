@@ -4,14 +4,14 @@ class Speck
   class Check
     ##
     # A block to be executed.
-    attr_accessor :check
+    attr_accessor :lambda
     
     ##
     # A description for the check. Usually a relevant line of code.
     attr_accessor :description
     
-    def initialize(check, description = "<undocumented>")
-      @check = check
+    def initialize(lambda, description = "<undocumented>")
+      @lambda = lambda
       @description = description
     end
     
@@ -19,7 +19,7 @@ class Speck
     # Executes this `Check`, raising an error if the block returns nil or
     # false.
     def execute
-      @check.call.tap {|succeeded| raise Exception::CheckFailed unless succeeded }
+      @lambda.call.tap {|succeeded| raise Exception::CheckFailed unless succeeded }
     end
     Speck.new :execute do
        Check.new(->{true}).execute.check
