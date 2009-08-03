@@ -1,5 +1,5 @@
-require 'speck/core_ext'
-require 'speck/check'
+# All library files are required at the bottom, because in this unique case we
+# need `Speck` defined before we can use it to `Speck` anything.
 
 class Speck
   
@@ -96,3 +96,6 @@ class Speck
   end
   
 end
+
+require 'speck/core_ext'
+require 'speck/check'
