@@ -65,18 +65,6 @@ class Speck
     Speck.stack.pop
   end
   
-  ##
-  # Executes the `Speck`, and prints the status of each `Check`
-  # --
-  # TODO: Fix the naming of this and `#execute`
-  # TODO: Get rid of this, printing should be up to the rake task at best, or
-  #       non–existent at worst. Keep it light!
-  def playback
-    execute
-    checks.each {|c| puts "`#{c.description}`"; c.execute }
-    children.each &:playback
-  end
-  
   
   ##
   # A root class, and container class, for `Speck` exceptions.

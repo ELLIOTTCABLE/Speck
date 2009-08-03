@@ -1,4 +1,11 @@
-desc 'Runs your specks'
+desc 'Recursively runs all root specks'
 task :run do
-  Speck::specks.select {|s| s.parent == nil }.each &:playback
+  roots = Speck::specks.select {|s| s.parent == nil }
+  
+  playback = lambda do |speck|
+    speck.execute
+    speck.checks.each {|c| p c.execute }
+    speck.children.each &playback
+  end
+  roots.each &playback
 end
