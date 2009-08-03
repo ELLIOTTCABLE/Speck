@@ -22,13 +22,14 @@ class Speck
       !!status
     end
     Speck.new :status do
+      object = Object.new
       Check.new(->{true}).execute.status
         .check {|s| s == true}
-      Check.new(->{42}).execute.status
-        .check {|s| s == 42}
+      Check.new(->{object}).execute.status
+        .check {|s| s == object}
       
       Check.new(->{true}).execute.success?.check
-      Check.new(->{42}).execute.success?.check
+      Check.new(->{object}).execute.success?.check
     end
     
     def initialize(lambda, description = "<undocumented>")
