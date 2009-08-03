@@ -14,6 +14,10 @@ class Speck
       @lambda = lambda
       @description = description
     end
+    Speck.new Check, :new do
+      my_lambda = ->{}
+      Check.new(my_lambda).lambda.check {|l| l == my_lambda }
+    end
     
     ##
     # Executes this `Check`, raising an error if the block returns nil or
