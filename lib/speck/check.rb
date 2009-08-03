@@ -23,6 +23,7 @@ class Speck
     end
     Speck.new :execute do
        Check.new(->{true}).execute.check
+       ->{ Check.new(->{false}).execute }.check_exception Speck::Exception::CheckFailed
     end
     
   end
