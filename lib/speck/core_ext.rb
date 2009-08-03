@@ -1,1 +1,1 @@
-require 'speck/core_ext/object_mixins'
+require 'speck/core_ext/check_mixins'
