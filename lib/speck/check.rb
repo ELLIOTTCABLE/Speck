@@ -21,5 +21,9 @@ class Speck
     def execute
       @check.call.tap {|succeeded| raise Exception::CheckFailed unless succeeded }
     end
+    Speck.new :execute do
+       Check.new(->{true}).execute.check
+    end
+    
   end
 end
