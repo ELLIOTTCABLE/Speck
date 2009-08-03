@@ -23,7 +23,7 @@ class Speck
       # whatever else you like.
       # 
       # `#check` can also be called without block on truthy objects (`true`,
-      # `false`, or `nil`)
+      # `false`, or `nil`, any other object will be treated as `true`)
       def check &check
         check = ->(_){self} unless block_given?
         
