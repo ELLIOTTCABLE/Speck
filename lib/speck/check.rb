@@ -24,6 +24,9 @@ class Speck
     Speck.new :execute do
        Check.new(->{true}).execute.check
        ->{ Check.new(->{false}).execute }.check_exception Speck::Exception::CheckFailed
+       
+       Check.new(->{"value"}).execute.check
+       Check.new(->{2 * 2}).execute.check {|value| value == 4 }
     end
     
   end
