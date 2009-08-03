@@ -17,6 +17,9 @@ class Speck
     Speck.new Check, :new do
       my_lambda = ->{}
       Check.new(my_lambda).lambda.check {|l| l == my_lambda }
+      
+      Check.new(->{}, "WOO! BLANK CHECK!").description
+        .check {|d| d == "WOO! BLANK CHECK!" }
     end
     
     ##
