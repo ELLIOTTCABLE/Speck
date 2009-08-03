@@ -19,7 +19,7 @@ class Speck
     # Executes this `Check`, raising an error if the block returns nil or
     # false.
     def execute
-      raise Exception::CheckFailed unless @check.call
+      @check.call.tap {|succeeded| raise Exception::CheckFailed unless succeeded }
     end
   end
 end
