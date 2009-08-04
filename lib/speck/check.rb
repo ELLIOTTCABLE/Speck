@@ -55,7 +55,7 @@ class Speck
     def execute
       @block.call.tap {|result| @status = result ? result : false }
       raise Exception::CheckFailed unless success?
-      self
+      return self
     end
     Speck.new :execute do
       Check.new(->{true}).execute.check {|c| c.success? }
