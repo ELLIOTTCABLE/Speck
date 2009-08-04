@@ -14,6 +14,10 @@ task :run do
     speck.checks.each do |check|
       begin
         check.execute
+        # TODO: Provide more useful information about the return value and
+        #       expected return value
+        # TODO: Colorize negated Checks with the bang as red, or something
+        #       similar
         puts check.description.ljust(72) + green(" # => " + check.status.inspect)
       rescue Speck::Exception::CheckFailed
         # TODO: Print a description of why the error failed, what was expected
