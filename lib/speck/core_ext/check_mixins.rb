@@ -58,15 +58,16 @@ class Speck
         source = source.partition(".check_exception").first
         # TODO: Get rid of the "->{…}" around the resulting string.
         
-        Speck.current.checks <<
-          Speck::Check.new(->(){
-            begin
-              self.call
-            rescue exception
-              return true
-            end
-            return false
-          }, source)
+        
+        Speck::Check.new(->(){
+          begin
+            self.call
+          rescue exception
+            return true
+          end
+          return false
+        }, source)
+          .tap {|check| Speck.current.checks << check }
       end
       
     end
