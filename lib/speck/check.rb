@@ -35,6 +35,9 @@ class Speck
         .check {|s| s == false}
       Check.new(->{nil}).tap {|c| c.execute rescue nil } .status
         .check {|s| s == false}
+      
+      ! Check.new(->{false}).tap {|c| c.execute rescue nil } .success?.check
+      ! Check.new(->{nil}).tap {|c| c.execute rescue nil } .success?.check
     end
     
     def initialize(block, description = "<undocumented>")
