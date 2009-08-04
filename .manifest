@@ -1,0 +1,8 @@
+lib/speck/check.rb
+lib/speck/core_ext/check_mixins.rb
+lib/speck/core_ext.rb
+lib/speck.rake
+lib/speck.rb
+Rakefile.rb
+README.markdown
+.manifest
