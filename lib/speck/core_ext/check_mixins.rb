@@ -37,8 +37,8 @@ class Speck
         source = source.partition(".check").first
         # TODO: Get rid of the "(…)" around the resulting string.
         
-        Speck.current.checks <<
-          Speck::Check.new(->(){ check[self] }, source)
+        Speck::Check.new(->(){ check[self] }, source)
+          .tap {|check| Speck.current.checks << check }
       end
     end
     
