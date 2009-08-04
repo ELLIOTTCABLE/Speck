@@ -22,7 +22,7 @@ begin
       g.manifest_name = '.manifest'
       g.retain_gemspec = true
       g.rakefile_name = 'Rakefile.rb'
-      g.ignore_pattern = /^\.git\/|\.gemspec/
+      g.ignore_pattern = /^\.git\/|^meta\/|\.gemspec/
     end
   end
   
@@ -46,4 +46,37 @@ begin
 rescue LoadError
   desc 'You need the `speck` gem to run specks'
   task :speck
+end
+
+# =======================
+# = Documentation tasks =
+# =======================
+begin
+  require 'yard'
+  require 'yard/rake/yardoc_task'
+  
+  task :documentation => :'documentation:generate'
+  namespace :documentation do
+    YARD::Rake::YardocTask.new :generate do |t|
+      t.files   = ['lib/**/*.rb']
+      t.options = ['--output-dir', File.join('meta', 'documentation'),
+                   '--readme', 'README.markdown',
+                   '--markup', 'markdown', '--markup-provider', 'maruku']
+    end
+    
+    YARD::Rake::YardocTask.new :dotyardoc do |t|
+      t.files   = ['lib/**/*.rb']
+      t.options = ['--no-output',
+                   '--readme', 'README.markdown',
+                   '--markup', 'markdown', '--markup-provider', 'maruku']
+    end
+    
+    task :open do
+      system 'open ' + File.join('meta', 'documentation', 'index.html') if RUBY_PLATFORM['darwin']
+    end
+  end
+  
+rescue LoadError
+  desc 'You need the `yard` and `maruku` gems to generate documentation'
+  task :documentation
 end
