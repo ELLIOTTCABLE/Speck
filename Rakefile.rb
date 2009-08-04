@@ -80,3 +80,10 @@ rescue LoadError
   desc 'You need the `yard` and `maruku` gems to generate documentation'
   task :documentation
 end
+
+desc 'Check everything over before commiting'
+task :aok => [:'documentation:generate', :'documentation:open',
+              :'package:manifest',
+              :'speck:run']
+
+task :ci => [:'documentation:generate', :'speck:run']
