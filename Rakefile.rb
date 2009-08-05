@@ -1,5 +1,6 @@
 ($:.unshift File.expand_path(File.join( File.dirname(__FILE__), 'lib' ))).uniq!
 require 'speck'
+require 'slack'
 
 # =======================
 # = Gem packaging tasks =
@@ -18,7 +19,7 @@ begin
       g.summary = "Supah-light 'n sexy specking!"
       g.url = 'http://github.com/elliottcable/speck'
       g.runtime_dependencies = []
-      g.development_dependencies = ['echoe >= 3.0.2']
+      g.development_dependencies = ['echoe >= 3.0.2', 'slack']
       g.manifest_name = '.manifest'
       g.retain_gemspec = true
       g.rakefile_name = 'Rakefile.rb'

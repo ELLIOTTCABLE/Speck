@@ -59,8 +59,6 @@ class Speck
   ##
   # Executes the `Speck`.
   def execute
-    Speck::Mixins::mixin!
-    
     Speck.stack << self
     speck.call
     Speck.stack.pop
@@ -79,5 +77,4 @@ class Speck
   
 end
 
-require 'speck/core_ext'
 require 'speck/check'
