@@ -1,5 +1,4 @@
 lib/speck/check.rb
-lib/speck.rake
 lib/speck.rb
 Rakefile.rb
 README.markdown

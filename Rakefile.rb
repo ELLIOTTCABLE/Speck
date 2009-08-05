@@ -1,6 +1,5 @@
 ($:.unshift File.expand_path(File.join( File.dirname(__FILE__), 'lib' ))).uniq!
 require 'speck'
-require 'slack'
 
 # =======================
 # = Gem packaging tasks =
@@ -19,7 +18,7 @@ begin
       g.summary = "Supah-light 'n sexy specking!"
       g.url = 'http://github.com/elliottcable/speck'
       g.runtime_dependencies = []
-      g.development_dependencies = ['echoe >= 3.0.2', 'slack']
+      g.development_dependencies = ['echoe >= 3.0.2', 'slack', 'spark']
       g.manifest_name = '.manifest'
       g.retain_gemspec = true
       g.rakefile_name = 'Rakefile.rb'
@@ -36,16 +35,19 @@ end
 # = Speck tasks =
 # ===============
 begin
-  # require 'speck'
+  require 'speck'
+  require 'slack'
+  require 'spark'
+  require 'spark/rake/speck_task'
   
   task :default => :'speck:run'
   task :speck => :'speck:run'
   namespace :speck do
-    load 'speck.rake'
+    Spark::Rake::SpeckTask.new
   end
   
 rescue LoadError
-  desc 'You need the `speck` gem to run specks'
+  desc 'You need the `speck`, `slack`, and `spark` gems to run specks'
   task :speck
 end
 
