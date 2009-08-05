@@ -69,18 +69,5 @@ class Speck
       a_check.execute.check {|rv| rv == a_check }
     end
     
-    ##
-    # Inverts a `Check`, causing it to treat success as failure and failure as
-    # success.
-    def !
-      old_block, @block = @block, -> { !old_block.call }
-      return self
-    end
-    Speck.new :! do
-      ! ->{ (!Check.new(->{false})).execute }
-        .check_exception Speck::Exception::CheckFailed
-      (!Check.new(->{false})).check {|c| c.execute.success? }
-    end
-    
   end
 end
