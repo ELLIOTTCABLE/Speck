@@ -55,6 +55,13 @@ class Speck
   # instance, would most likely be a `Speck` describing a `Module` or `Class`
   # on which that method is defined
   attr_accessor :environment
+  def environment= speck
+    raise ArgumentError, 'environment must be a Speck' if speck &&! speck.is_a?(Speck)
+    
+    @environment.children.delete self if @environment
+    @environment = speck
+    (@environment ? @environment.children : Speck.unbound) << self
+  end
   
   ##
   # The checks involved in the current `Speck`
@@ -78,14 +85,8 @@ class Speck
   ##
   # Creates a new `Speck`.
   def initialize object, _={}, &block
-    raise ArgumentError, 'environment must be a Speck' if _[:environment] &&!
-      _[:environment].is_a?(Speck)
-    
     self.target = object
-    
-    @environment = _[:environment] || Speck.current
-    (@environment ? @environment.children : Speck.unbound) << self
-    
+    self.environment = _[:environment] || Speck.current
     @block = block
   end
   
