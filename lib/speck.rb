@@ -38,7 +38,7 @@ class Speck
   def children; @children ||= Array.new; end
   
   ##
-  # The environment of a `Speck` is another `Speck`, describing some sort of
+  # The `environment` of a `Speck` is another `Speck`, describing some sort of
   # parent. The environment of a `Speck` describing an `UnboundMethod`, for
   # instance, would most likely be a `Speck` describing a `Module` or `Class`
   # on which that method is defined
