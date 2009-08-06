@@ -67,13 +67,6 @@ begin
                    '--markup', 'markdown', '--markup-provider', 'maruku']
     end
     
-    YARD::Rake::YardocTask.new :dotyardoc do |t|
-      t.files   = ['lib/**/*.rb']
-      t.options = ['--no-output',
-                   '--readme', 'README.markdown',
-                   '--markup', 'markdown', '--markup-provider', 'maruku']
-    end
-    
     task :open do
       system 'open ' + File.join('meta', 'documentation', 'index.html') if RUBY_PLATFORM['darwin']
     end
