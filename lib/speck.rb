@@ -38,8 +38,11 @@ class Speck
   def children; @children ||= Array.new; end
   
   ##
-  # Parent `Speck`
-  attr_accessor :parent
+  # The environment of a `Speck` is another `Speck`, describing some sort of
+  # parent. The environment of a `Speck` describing an `UnboundMethod`, for
+  # instance, would most likely be a `Speck` describing a `Module` or `Class`
+  # on which that method is defined
+  attr_accessor :environment
   
   ##
   # The checks involved in the current `Speck`.
@@ -48,12 +51,13 @@ class Speck
   
   ##
   # Creates a new `Speck`.
-  def initialize *targets, &block
-    @block = block
-    @parent = Speck.current
+  def initialize target, _={}, &block
+    raise ArgumentError, 'environment must be a Speck' if _[:environment] &&!
+      _[:environment].is_a?(Speck)
     
-    @parent.children << self if @parent
-    Speck.unbound << self
+    @block = block
+    @environment = _[:environment] || Speck.current
+    (@environment ? @environment.children : Speck.unbound) << self
   end
   
   ##
