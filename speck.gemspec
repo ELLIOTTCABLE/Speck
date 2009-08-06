@@ -6,11 +6,11 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["elliottcable"]
-  s.date = %q{2009-08-04}
+  s.date = %q{2009-08-06}
   s.description = %q{Supah-light 'n sexy specking!}
   s.email = ["Speck@elliottcable.com"]
-  s.extra_rdoc_files = ["lib/speck/check.rb", "lib/speck.rb", "README.markdown"]
-  s.files = ["lib/speck/check.rb", "lib/speck.rb", "Rakefile.rb", "README.markdown", ".manifest", "speck.gemspec"]
+  s.extra_rdoc_files = ["lib/speck/check.rb", "lib/speck.rb", "LICENSE.text", "README.markdown"]
+  s.files = ["lib/speck/check.rb", "lib/speck.rb", "LICENSE.text", "Rakefile.rb", "README.markdown", ".manifest", "speck.gemspec"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/elliottcable/speck}
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Speck", "--main", "README.markdown"]
