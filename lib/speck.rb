@@ -10,6 +10,7 @@ class Speck
     # All defined Specks
     attr_accessor :specks
     def specks; @specks ||= Array.new; end
+    
     # The current `Speck` execution stack
     # 
     # @see #current
