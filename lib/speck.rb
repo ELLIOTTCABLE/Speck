@@ -45,7 +45,7 @@ class Speck
   attr_accessor :environment
   
   ##
-  # The checks involved in the current `Speck`.
+  # The checks involved in the current `Speck`
   attr_accessor :checks
   def checks; @checks ||= Array.new; end
   
