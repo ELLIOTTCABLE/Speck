@@ -45,7 +45,7 @@ class Speck
   attr_accessor :block
   
   ##
-  # Child `Speck`s
+  # `Speck`s which consider this `Speck` to be their environment
   attr_accessor :children
   def children; @children ||= Array.new; end
   
