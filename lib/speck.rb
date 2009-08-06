@@ -26,6 +26,13 @@ class Speck
     def current
       stack.last
     end
+    
+    ##
+    # Retreives the `Speck`s defiend for a given object, if any.
+    def for object
+      object.instance_variable_get(NinjaVar) || object.instance_variable_set(NinjaVar, Array.new)
+    end
+    
   end
   
   ##
@@ -60,11 +67,12 @@ class Speck
   # instance of `Class`, `Module`, `Method` for “class” methods, or
   # `UnboundMethod` for instance methods)
   attr_accessor :target
-  def target= o
-    @target.instance_variable_set NinjaVar, nil if
-      @target.instance_variable_get NinjaVar
-    @target = o
-    @target.instance_variable_set NinjaVar, self
+  def target= object
+    Speck::for(@target).delete self if @target and Speck::for(@target).include? self
+    
+    @target = object
+    
+    Speck::for(@target) << self
   end
   
   ##
