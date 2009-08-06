@@ -3,17 +3,18 @@ class Speck
   # Represents a queued thing to be checked of some sort, within a `Speck`.
   class Check
     ##
-    # A block to be executed.
+    # The block to be executed, determining the success or failure of this
+    # particular `Check`
     attr_accessor :block
     
     ##
-    # A description for the check. Usually a relevant line of code.
+    # A description for the check (usually a relevant line of source)
     attr_accessor :description
     
     ##
     # The status of the `Check`. `nil` indicates the `Check` hasn’t been
     # executed, and `true` or `false` indicate the success of the latest
-    # execution.
+    # execution
     attr_accessor :status
     
     ##

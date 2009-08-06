@@ -7,19 +7,18 @@ class Speck
   class <<self
     
     ##
-    # All defined Specks.
+    # All defined Specks
     attr_accessor :specks
     def specks; @specks ||= Array.new; end
-    
-    ##
-    # The current stack of nested `Speck`s.
+    # The current `Speck` execution stack
     # 
     # @see #current
     attr_accessor :stack
     def stack; @stack ||= Array.new; end
     
     ##
-    # Returns the currently active `Speck`.
+    # Returns the top `Speck` on the execution stack (the one currently in the
+    # process of executing)
     # 
     # When your `Speck`s are being run, there is a `stack` of `Speck` objects,
     # consisting of the current nesting list of `Speck`s being run.
