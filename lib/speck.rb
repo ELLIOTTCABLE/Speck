@@ -30,7 +30,7 @@ class Speck
   
   ##
   # The block to be executed
-  attr_accessor :speck
+  attr_accessor :block
   
   ##
   # Child `Speck`s
@@ -48,8 +48,8 @@ class Speck
   
   ##
   # Creates a new `Speck`.
-  def initialize *targets, &speck
-    @speck = speck
+  def initialize *targets, &block
+    @block = block
     @parent = Speck.current
     
     @parent.children << self if @parent
@@ -60,7 +60,7 @@ class Speck
   # Executes the `Speck`.
   def execute
     Speck.stack << self
-    speck.call
+    @block.call
     Speck.stack.pop
   end
   
