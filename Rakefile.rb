@@ -86,7 +86,7 @@ end
 
 desc 'Check everything over before commiting'
 task :aok => [:'documentation:generate', :'documentation:open',
-              :'package:manifest',
+              :'package:manifest', :'package:package',
               :'speck:run']
 
 task :ci => [:'documentation:generate', :'speck:run']
