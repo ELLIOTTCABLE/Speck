@@ -7,9 +7,9 @@ class Speck
   class <<self
     
     ##
-    # All defined Specks
-    attr_accessor :specks
-    def specks; @specks ||= Array.new; end
+    # All specks not bound to an environment
+    attr_accessor :unbound
+    def unbound; @unbound ||= Array.new; end
     
     # The current `Speck` execution stack
     # 
@@ -53,7 +53,7 @@ class Speck
     @parent = Speck.current
     
     @parent.children << self if @parent
-    Speck.specks << self
+    Speck.unbound << self
   end
   
   ##
