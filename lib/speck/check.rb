@@ -22,7 +22,7 @@ class Speck
     def success?
       !!status
     end
-    Speck.new :status do
+    Speck.new Check.instance_method :status do
       object = Object.new
       Check.new(->{true}).execute.status
         .check {|s| s == true}
@@ -45,7 +45,7 @@ class Speck
       @block = block
       @description = description
     end
-    Speck.new :initialize do
+    Speck.new Check.instance_method :initialize do
       my_lambda = ->{}
       Check.new(my_lambda).block.check {|b| b == my_lambda }
       
@@ -61,7 +61,7 @@ class Speck
       raise Exception::CheckFailed unless success?
       return self
     end
-    Speck.new :execute do
+    Speck.new Check.instance_method :execute do
       Check.new(->{true}).execute.check {|c| c.success? }
       ->{ Check.new(->{false}).execute }
         .check_exception Speck::Exception::CheckFailed

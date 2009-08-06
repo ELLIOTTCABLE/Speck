@@ -29,6 +29,11 @@ class Speck
   end
   
   ##
+  # This instance variable will be set on target objects to point to the
+  # specks for that object
+  NinjaVar = :@specks
+  
+  ##
   # The block to be executed
   attr_accessor :block
   
@@ -50,14 +55,30 @@ class Speck
   def checks; @checks ||= Array.new; end
   
   ##
+  # The `target` of a speck is usually the object which it is intended to
+  # describe (and test) the functionality of (Usually, this will be an
+  # instance of `Class`, `Module`, `Method` for “class” methods, or
+  # `UnboundMethod` for instance methods)
+  attr_accessor :target
+  def target= o
+    @target.instance_variable_set NinjaVar, nil if
+      @target.instance_variable_get NinjaVar
+    @target = o
+    @target.instance_variable_set NinjaVar, self
+  end
+  
+  ##
   # Creates a new `Speck`.
-  def initialize target, _={}, &block
+  def initialize object, _={}, &block
     raise ArgumentError, 'environment must be a Speck' if _[:environment] &&!
       _[:environment].is_a?(Speck)
     
-    @block = block
+    self.target = object
+    
     @environment = _[:environment] || Speck.current
     (@environment ? @environment.children : Speck.unbound) << self
+    
+    @block = block
   end
   
   ##
