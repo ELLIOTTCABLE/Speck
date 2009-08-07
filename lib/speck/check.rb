@@ -16,15 +16,15 @@ class Speck
     # executed, and `true` or `false` indicate the success of the latest
     # execution
     attr_accessor :status
-    alias_method :success?, :status
-    Speck.new Check.instance_method :success? do
+    alias_method :pass?, :status
+    Speck.new Check.instance_method :pass? do
       object = Object.new
       
-      Check.new(->{true}).execute.success?.check
-      Check.new(->{object}).execute.success?.check
+      Check.new(->{true}).execute.pass?.check
+      Check.new(->{object}).execute.pass?.check
       
-      ! Check.new(->{false}).tap {|c| c.execute rescue nil } .success?.check
-      ! Check.new(->{nil}).tap {|c| c.execute rescue nil } .success?.check
+      ! Check.new(->{false}).tap {|c| c.execute rescue nil } .pass?.check
+      ! Check.new(->{nil}).tap {|c| c.execute rescue nil } .pass?.check
     end
     
     def initialize(block, description = "<undocumented>")
@@ -44,11 +44,11 @@ class Speck
     # false.
     def execute
       @status = @block.call ? true : false
-      raise Exception::CheckFailed unless success?
+      raise Exception::CheckFailed unless pass?
       return self
     end
     Speck.new Check.instance_method :execute do
-      Check.new(->{true}).execute.check {|c| c.success? }
+      Check.new(->{true}).execute.check {|c| c.pass? }
       
       ->{ Check.new(->{false}).execute }
         .check_exception Speck::Exception::CheckFailed
