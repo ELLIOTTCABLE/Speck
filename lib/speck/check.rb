@@ -16,18 +16,13 @@ class Speck
     # executed, and `true` or `false` indicate the success of the latest
     # execution
     attr_accessor :status
-    
-    ##
-    # Checks the truthiness of this `Check`’s `status`.
-    def success?
-      !!status
-    end
+    alias_method :success?, :status
     Speck.new Check.instance_method :status do
       object = Object.new
       Check.new(->{true}).execute.status
         .check {|s| s == true}
       Check.new(->{object}).execute.status
-        .check {|s| s == object}
+        .check {|s| s == true}
       
       Check.new(->{true}).execute.success?.check
       Check.new(->{object}).execute.success?.check
@@ -57,7 +52,7 @@ class Speck
     # Executes this `Check`, raising an error if the block returns nil or
     # false.
     def execute
-      @block.call.tap {|result| @status = result ? result : false }
+      @status = @block.call ? true : false
       raise Exception::CheckFailed unless success?
       return self
     end
