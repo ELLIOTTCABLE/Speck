@@ -17,20 +17,11 @@ class Speck
     # execution
     attr_accessor :status
     alias_method :success?, :status
-    Speck.new Check.instance_method :status do
+    Speck.new Check.instance_method :success? do
       object = Object.new
-      Check.new(->{true}).execute.status
-        .check {|s| s == true}
-      Check.new(->{object}).execute.status
-        .check {|s| s == true}
       
       Check.new(->{true}).execute.success?.check
       Check.new(->{object}).execute.success?.check
-      
-      Check.new(->{false}).tap {|c| c.execute rescue nil } .status
-        .check {|s| s == false}
-      Check.new(->{nil}).tap {|c| c.execute rescue nil } .status
-        .check {|s| s == false}
       
       ! Check.new(->{false}).tap {|c| c.execute rescue nil } .success?.check
       ! Check.new(->{nil}).tap {|c| c.execute rescue nil } .success?.check
