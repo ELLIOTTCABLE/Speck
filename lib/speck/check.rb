@@ -42,10 +42,10 @@ class Speck
     end
     Speck.new Check.instance_method :initialize do
       my_lambda = ->{}
-      Check.new(my_lambda).block.check {|b| b == my_lambda }
+      Check.new(my_lambda).check {|c| c.block == my_lambda }
       
-      Check.new(->{}, "WOO! BLANK CHECK!").description
-        .check {|d| d == "WOO! BLANK CHECK!" }
+      Check.new(->{}, "WOO! BLANK CHECK!")
+        .check {|c| c.description == "WOO! BLANK CHECK!" }
     end
     
     ##
@@ -58,6 +58,7 @@ class Speck
     end
     Speck.new Check.instance_method :execute do
       Check.new(->{true}).execute.check {|c| c.success? }
+      
       ->{ Check.new(->{false}).execute }
         .check_exception Speck::Exception::CheckFailed
       
