@@ -8,8 +8,15 @@ class Speck
     attr_accessor :block
     
     ##
-    # A description for the check (usually a relevant line of source)
-    attr_accessor :description
+    # A description of the `Check`’s target—that is, what it is checking (this
+    # is often a line of source describing how the target was constructed)
+    attr_accessor :target
+    
+    ##
+    # A description of the `Check`’s expectation—that is, what it expects
+    # about its `target` (again, this is usually a short ’n’ sweet line of
+    # source containing a comparator)
+    attr_accessor :expectation
     
     ##
     # The status of the `Check`. `nil` indicates the `Check` hasn’t been
@@ -27,16 +34,20 @@ class Speck
       ! Check.new {nil} .tap {|c| c.execute rescue nil } .pass?.check
     end
     
-    def initialize(description = "<undocumented>", &block)
+    def initialize(target = "<unknown>", expectation = "<unknown>", &block)
+      @target = target
+      @expectation = expectation
       @block = block
-      @description = description
     end
     Speck.new Check.method :new do
       my_lambda = ->{}
       Check.new(&my_lambda).check {|c| c.block == my_lambda }
       
-      Check.new("WOO! BLANK CHECK!") {}
-        .check {|c| c.description == "WOO! BLANK CHECK!" }
+      Check.new('Absolutely nothing.') {}
+        .check {|c| c.target == 'Absolutely nothing.' }
+      
+      Check.new('nothing', 'who cares') {}
+        .check {|c| c.expectation == 'who cares' }
     end
     
     ##
