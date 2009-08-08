@@ -102,9 +102,6 @@ class Speck
   ##
   # A root class, and container class, for `Speck` exceptions.
   class Exception < StandardError
-    # Raised any time checks are run outside of a `Speck`
-    NoEnvironment = Class.new self
-    
     # Raised when a `Check` fails
     CheckFailed = Class.new self
   end
