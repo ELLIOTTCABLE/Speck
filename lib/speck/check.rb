@@ -20,22 +20,22 @@ class Speck
     Speck.new Check.instance_method :pass? do
       object = Object.new
       
-      Check.new(->{true}).execute.pass?.check
-      Check.new(->{object}).execute.pass?.check
+      Check.new {true} .execute.pass?.check
+      Check.new {object} .execute.pass?.check
       
-      ! Check.new(->{false}).tap {|c| c.execute rescue nil } .pass?.check
-      ! Check.new(->{nil}).tap {|c| c.execute rescue nil } .pass?.check
+      ! Check.new {false} .tap {|c| c.execute rescue nil } .pass?.check
+      ! Check.new {nil} .tap {|c| c.execute rescue nil } .pass?.check
     end
     
-    def initialize(block, description = "<undocumented>")
+    def initialize(description = "<undocumented>", &block)
       @block = block
       @description = description
     end
     Speck.new Check.method :new do
       my_lambda = ->{}
-      Check.new(my_lambda).check {|c| c.block == my_lambda }
+      Check.new(&my_lambda).check {|c| c.block == my_lambda }
       
-      Check.new(->{}, "WOO! BLANK CHECK!")
+      Check.new("WOO! BLANK CHECK!") {}
         .check {|c| c.description == "WOO! BLANK CHECK!" }
     end
     
@@ -48,12 +48,12 @@ class Speck
       return self
     end
     Speck.new Check.instance_method :execute do
-      Check.new(->{true}).execute.check {|c| c.pass? }
+      Check.new {true} .execute.check {|c| c.pass? }
       
-      ->{ Check.new(->{false}).execute }
+      ->{ Check.new {false} .execute }
         .check_exception Speck::Exception::CheckFailed
       
-      a_check = Check.new(->{true})
+      a_check = Check.new {true}
       a_check.execute.check {|rv| rv == a_check }
     end
     
