@@ -42,7 +42,7 @@ class Speck
   ##
   # This instance variable will be set on target objects to point to the
   # specks for that object
-  NinjaVar = :@specks
+  NinjaVar = :@_specks_
   
   ##
   # The block to be executed
