@@ -5,7 +5,7 @@ class Speck
     ##
     # The block to be executed, determining the success or failure of this
     # particular `Check`
-    attr_accessor :block
+    attr_accessor :expectation
     
     ##
     # The status of the `Check`. `nil` indicates the `Check` hasn’t been
@@ -23,19 +23,19 @@ class Speck
       ! Check.new {nil} .tap {|c| c.execute rescue nil } .pass?.check
     end
     
-    def initialize(&block)
-      @block = block
+    def initialize(&expectation)
+      @expectation = expectation
     end
     Speck.new Check.instance_method :initialize do
       my_lambda = ->{}
-      Check.new(&my_lambda).check {|c| c.block == my_lambda }
+      Check.new(&my_lambda).check {|c| c.expectation == my_lambda }
     end
     
     ##
-    # Executes this `Check`, raising an error if the block returns nil or
-    # false.
+    # Executes this `Check`, raising an error if the expectation returns nil
+    # or false.
     def execute
-      @status = @block.call ? true : false
+      @status = @expectation.call ? true : false
       raise Exception::CheckFailed unless pass?
       return self
     end
