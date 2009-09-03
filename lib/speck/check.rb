@@ -31,7 +31,7 @@ class Speck
       @block = block
       @description = description
     end
-    Speck.new Check.method :new do
+    Speck.new Check.instance_method :initialize do
       my_lambda = ->{}
       Check.new(&my_lambda).check {|c| c.block == my_lambda }
       
