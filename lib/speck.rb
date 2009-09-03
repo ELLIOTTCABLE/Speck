@@ -28,7 +28,11 @@ class Speck
     end
     
     ##
-    # Retreives the `Speck`s defiend for a given object, if any.
+    # Retreives the `Speck`s defiend for a given object, if any. It’s worth
+    # noting that `Module#instance_method` returns a new `UnboundMethod` object
+    # every time you call it, even for the same method… so you can’t retreive
+    # Specks assigned to `UnboundMethods` via `Module#instance_method` with
+    # this method.
     def for object
       object.instance_variable_get(NinjaVar) || object.instance_variable_set(NinjaVar, Array.new)
     end
