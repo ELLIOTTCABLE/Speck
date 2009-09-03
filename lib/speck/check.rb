@@ -8,10 +8,6 @@ class Speck
     attr_accessor :block
     
     ##
-    # A description for the check (usually a relevant line of source)
-    attr_accessor :description
-    
-    ##
     # The status of the `Check`. `nil` indicates the `Check` hasn’t been
     # executed, and `true` or `false` indicate the success of the latest
     # execution
@@ -27,16 +23,12 @@ class Speck
       ! Check.new {nil} .tap {|c| c.execute rescue nil } .pass?.check
     end
     
-    def initialize(description = "<undocumented>", &block)
+    def initialize(&block)
       @block = block
-      @description = description
     end
     Speck.new Check.instance_method :initialize do
       my_lambda = ->{}
       Check.new(&my_lambda).check {|c| c.block == my_lambda }
-      
-      Check.new("WOO! BLANK CHECK!") {}
-        .check {|c| c.description == "WOO! BLANK CHECK!" }
     end
     
     ##
