@@ -4,8 +4,15 @@ class Speck
   class Check
     ##
     # The block to be executed, determining the success or failure of this
-    # particular `Check`
+    # particular `Check`. If it accepts an argument, the result of the target
+    # block will be passed as that argument.
     attr_accessor :expectation
+    
+    ##
+    # The `target` of a `Check` is a block that returns an object to be passed
+    # to the `expectation`. It represents the object that the `Check` is
+    # intended to, well, check.
+    attr_accessor :target
     
     ##
     # The status of the `Check`. `nil` indicates the `Check` hasn’t been
@@ -23,7 +30,8 @@ class Speck
       ! Check.new {nil} .tap {|c| c.execute rescue nil } .pass?.check
     end
     
-    def initialize(&expectation)
+    def initialize(target = nil, &expectation)
+      @target = target.respond_to?(:call) ? target : ->{target}
       @expectation = expectation
     end
     Speck.new Check.instance_method :initialize do
@@ -35,7 +43,8 @@ class Speck
     # Executes this `Check`, raising an error if the expectation returns nil
     # or false.
     def execute
-      @status = @expectation.call ? true : false
+      call = @expectation.arity == 0 ? ->{@expectation.call} : ->{@expectation[@target.call]}
+      @status = call.call ? true : false
       raise Exception::CheckFailed unless pass?
       return self
     end
