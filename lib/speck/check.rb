@@ -33,6 +33,7 @@ class Speck
     def initialize(target = nil, &expectation)
       @target = target.respond_to?(:call) ? target : ->{target}
       @expectation = expectation
+      Speck.current.checks << self if Speck.current
     end
     Speck.new Check.instance_method :initialize do
       my_lambda = ->{}
