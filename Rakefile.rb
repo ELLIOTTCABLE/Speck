@@ -36,14 +36,23 @@ end
 # ===============
 begin
   require 'speck'
-  require 'slack'
-  require 'spark'
-  require 'spark/rake/speck_task'
   
   task :default => :'speck:run'
   task :speck => :'speck:run'
   namespace :speck do
-    Spark::Rake::SpeckTask.new
+    task :run do
+      ['specifications/**/*_specs.rb', 'lib/**/*.rb'].map {|p| Dir.glob(p) }
+        .flatten.each {|f| require f }
+      
+      playback = lambda do |speck|
+        puts(speck.target.inspect + ':')
+        speck.execute
+        speck.checks.each &:execute
+        speck.children.each &playback
+      end
+      
+      Speck::unbound.each &playback
+    end
   end
   
 rescue LoadError

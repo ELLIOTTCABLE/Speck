@@ -1,38 +1,43 @@
 ($:.unshift File.expand_path(File.join(
   File.dirname(__FILE__), 'lib' ))).uniq!
 require 'speck'
-require 'slack'
 
 require 'speck/check'
 
-# TODO: Mock `Check::current.specks#<<` such that, when executed, these checks
-# don’t actually create new checks to be executed.
 Speck.new Speck::Check do |target|
   Check = Speck::Check
   
   Speck.new Check.instance_method :pass? do
     object = Object.new
     
-    Check.new {true} .execute.pass?.check
-    Check.new {object} .execute.pass?.check
+    Check.new(->{ Check.new {true} }) {|c| c.execute.pass? }
+    Check.new(->{ Check.new {object} }) {|c| c.execute.pass? }
     
-    ! Check.new {false} .tap {|c| c.execute rescue nil } .pass?.check
-    ! Check.new {nil} .tap {|c| c.execute rescue nil } .pass?.check
+    Check.new(->{ Check.new {false} }) {|c|
+      ! c.tap {|c| c.execute rescue nil } .pass? }
+    Check.new(->{ Check.new {nil} }) {|c|
+      ! c.tap {|c| c.execute rescue nil } .pass? }
   end
   
   Speck.new Check.instance_method :initialize do
     my_lambda = ->{}
-    Check.new(&my_lambda).check {|c| c.expectation == my_lambda }
+    Check.new(->{ Check.new(&my_lambda) }) {|c| c.expectation == my_lambda }
   end
   
   Speck.new Check.instance_method :execute do
-    Check.new {true} .execute.check {|c| c.pass? }
+    Check.new(->{ Check.new {true} .execute }) {|c| c.pass? }
     
-    ->{ Check.new {false} .execute }
-      .check_exception Speck::Exception::CheckFailed
+    Check.new(->{ ->{ Check.new {false} .execute } }) do |block|
+      begin
+        block.call
+        false
+      rescue Speck::Exception::CheckFailed
+        true
+      end
+    end
     
     a_check = Check.new {true}
-    a_check.execute.check {|rv| rv == a_check }
+    Check.new(->{ a_check.execute }) {|rv| rv == a_check }
   end
   
 end
