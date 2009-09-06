@@ -20,24 +20,11 @@ class Speck
     # execution
     attr_accessor :status
     alias_method :pass?, :status
-    Speck.new Check.instance_method :pass? do
-      object = Object.new
-      
-      Check.new {true} .execute.pass?.check
-      Check.new {object} .execute.pass?.check
-      
-      ! Check.new {false} .tap {|c| c.execute rescue nil } .pass?.check
-      ! Check.new {nil} .tap {|c| c.execute rescue nil } .pass?.check
-    end
     
     def initialize(target = nil, &expectation)
       @target = target.respond_to?(:call) ? target : ->{target}
       @expectation = expectation
       Speck.current.checks << self if Speck.current
-    end
-    Speck.new Check.instance_method :initialize do
-      my_lambda = ->{}
-      Check.new(&my_lambda).check {|c| c.expectation == my_lambda }
     end
     
     ##
@@ -48,15 +35,6 @@ class Speck
       @status = call.call ? true : false
       raise Exception::CheckFailed unless pass?
       return self
-    end
-    Speck.new Check.instance_method :execute do
-      Check.new {true} .execute.check {|c| c.pass? }
-      
-      ->{ Check.new {false} .execute }
-        .check_exception Speck::Exception::CheckFailed
-      
-      a_check = Check.new {true}
-      a_check.execute.check {|rv| rv == a_check }
     end
     
   end
