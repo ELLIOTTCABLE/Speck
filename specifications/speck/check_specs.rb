@@ -22,6 +22,10 @@ Speck.new Speck::Check do |target|
   Speck.new Check.instance_method :initialize do
     my_lambda = ->{}
     Check.new(->{ Check.new(&my_lambda) }) {|c| c.expectation == my_lambda }
+    
+    object = Object.new
+    Check.new(->{ Check.new(my_lambda) {} }) {|c| c.target == my_lambda }
+    Check.new(->{ Check.new(object) {} }) {|c| c.target.call == object }
   end
   
   Speck.new Check.instance_method :execute do
