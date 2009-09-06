@@ -30,7 +30,6 @@ Speck.new Speck::Check do |target|
   
   Speck.new Check.instance_method :execute do
     Check.new(->{ Check.new {true} .execute }) {|c| c.pass? }
-    
     Check.new(->{ ->{ Check.new {false} .execute } }) do |block|
       begin
         block.call
@@ -42,6 +41,14 @@ Speck.new Speck::Check do |target|
     
     a_check = Check.new {true}
     Check.new(->{ a_check.execute }) {|rv| rv == a_check }
+    
+    object = Object.new
+    Check.new(->{ Check.new(object) {|passed| @passed = passed } }) {|c|
+      c.execute; @passed == object }
+    
+    # FIXME: Pending…
+    # Check.new(->{ Check.new(->{ @called = true }) {true} }) {|c|
+    #   c.execute; @called }
   end
   
 end
