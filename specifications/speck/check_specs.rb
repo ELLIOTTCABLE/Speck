@@ -5,6 +5,8 @@ require 'slack'
 
 require 'speck/check'
 
+# TODO: Mock `Check::current.specks#<<` such that, when executed, these checks
+# don’t actually create new checks to be executed.
 Speck.new Speck::Check do |target|
   Check = Speck::Check
   
