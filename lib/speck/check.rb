@@ -31,7 +31,7 @@ class Speck
     # Executes this `Check`, raising an error if the expectation returns nil
     # or false.
     def execute
-      call = @expectation.arity == 0 ? ->{@expectation.call} : ->{@expectation[@target.call]}
+      call = @expectation.arity == 0 ? ->{@target.call; @expectation.call} : ->{@expectation[@target.call]}
       @status = call.call ? true : false
       raise Exception::CheckFailed unless pass?
       return self

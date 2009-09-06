@@ -46,9 +46,8 @@ Speck.new Speck::Check do |target|
     Check.new(->{ Check.new(object) {|passed| @passed = passed } }) {|c|
       c.execute; @passed == object }
     
-    # FIXME: Pending…
-    # Check.new(->{ Check.new(->{ @called = true }) {true} }) {|c|
-    #   c.execute; @called }
+    Check.new(->{ Check.new(->{ @called = true }) {true} }) {|c|
+      c.execute; @called }
   end
   
 end
