@@ -7,16 +7,16 @@ require 'speck/check'
 Speck.new Speck, Speck::Check do |target|
   Check = Speck::Check
   
-  Speck.new Check.instance_method :pass? do
+  Speck.new Check.instance_method :passed? do
     object = Object.new
     
-    Check.new(->{ Check.new {true} }) {|c| c.execute.pass? }
-    Check.new(->{ Check.new {object} }) {|c| c.execute.pass? }
+    Check.new(->{ Check.new {true} }) {|c| c.execute.passed? }
+    Check.new(->{ Check.new {object} }) {|c| c.execute.passed? }
     
     Check.new(->{ Check.new {false} }) {|c|
-      ! c.tap {|c| c.execute rescue nil } .pass? }
+      ! c.tap {|c| c.execute rescue nil } .passed? }
     Check.new(->{ Check.new {nil} }) {|c|
-      ! c.tap {|c| c.execute rescue nil } .pass? }
+      ! c.tap {|c| c.execute rescue nil } .passed? }
   end
   
   Speck.new Check.instance_method :initialize do
@@ -29,7 +29,7 @@ Speck.new Speck, Speck::Check do |target|
   end
   
   Speck.new Check.instance_method :execute do
-    Check.new(->{ Check.new {true} .execute }) {|c| c.pass? }
+    Check.new(->{ Check.new {true} .execute }) {|c| c.passed? }
     Check.new(->{ ->{ Check.new {false} .execute } }) do |block|
       begin
         block.call

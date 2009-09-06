@@ -19,7 +19,9 @@ class Speck
     # executed, and `true` or `false` indicate the success of the latest
     # execution
     attr_accessor :status
-    alias_method :pass?, :status
+    def passed?
+      status == :passed
+    end
     
     def initialize(target = nil, &expectation)
       @target = target.respond_to?(:call) ? target : ->{target}
@@ -32,8 +34,8 @@ class Speck
     # or false.
     def execute
       call = @expectation.arity == 0 ? ->{@target.call; @expectation.call} : ->{@expectation[@target.call]}
-      @status = call.call ? true : false
-      raise Exception::CheckFailed unless pass?
+      @status = call.call ? :passed : :failed
+      raise Exception::CheckFailed unless passed?
       return self
     end
     
