@@ -4,7 +4,7 @@ require 'speck'
 
 require 'speck/check'
 
-Speck.new Speck::Check do |target|
+Speck.new Speck, Speck::Check do |target|
   Check = Speck::Check
   
   Speck.new Check.instance_method :pass? do

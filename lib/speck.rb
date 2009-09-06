@@ -28,13 +28,27 @@ class Speck
     end
     
     ##
-    # Retreives the `Speck`s defiend for a given object, if any. It’s worth
-    # noting that `Module#instance_method` returns a new `UnboundMethod` object
-    # every time you call it, even for the same method… so you can’t retreive
-    # Specks assigned to `UnboundMethods` via `Module#instance_method` with
-    # this method.
+    # Retreives the `Speck`s defiend for a given object, or, if none are
+    # defined, creates a new (empty) `Speck` for it.
+    # 
+    # It’s worth noting that `Module#instance_method` returns a new
+    # `UnboundMethod` object every time you call it, even for the same method…
+    # so you can’t retreive Specks assigned to `UnboundMethods` via
+    # `Module#instance_method` with this method.
     def for object
-      object.instance_variable_get(NinjaVar) || object.instance_variable_set(NinjaVar, Array.new)
+      specks = Speck::on object
+      specks << Speck.new(object) if specks.empty?
+      return specks
+    end
+    
+    ##
+    # Functions like `Speck::for`, without creating a new `Speck` if none are
+    # defined.
+    # 
+    # @see `Speck::for`
+    def on object
+      object.instance_variable_get(NinjaVar) ||
+        object.instance_variable_set(NinjaVar, Array.new)
     end
     
   end
@@ -59,11 +73,13 @@ class Speck
   # instance, would most likely be a `Speck` describing a `Module` or `Class`
   # on which that method is defined
   attr_accessor :environment
-  def environment= speck
-    raise ArgumentError, 'environment must be a Speck' if speck &&! speck.is_a?(Speck)
+  def environment= object
+    (@environment ? @environment.children : Speck.unbound).delete self
     
-    @environment.children.delete self if @environment
+    speck = object.is_a?(Speck) || object.nil? ?
+      object : Speck::for(object).first
     @environment = speck
+    
     (@environment ? @environment.children : Speck.unbound) << self
   end
   
@@ -79,19 +95,26 @@ class Speck
   # `UnboundMethod` for instance methods)
   attr_accessor :target
   def target= object
-    Speck::for(@target).delete self if @target and Speck::for(@target).include? self
+    Speck::on(@target).delete self if @target and Speck::on(@target).include? self
     
     @target = object
     
-    Speck::for(@target) << self
+    Speck::on(@target) << self
   end
   
   ##
   # Creates a new `Speck`.
-  def initialize object, _={}, &block
+  def initialize *environment, object, &block
     self.target = object
-    self.environment = _[:environment] || Speck.current
-    @block = block
+    
+    environment = environment.inject do |prev, curr|
+      raise 'pre-existing environment!' if Speck::for(curr).first.environment and Speck::for(curr).first.environment != Speck::for(prev).first
+      Speck::for(curr).first.environment = Speck::for(prev).first
+      curr
+    end
+    
+    self.environment = environment ? Speck::for(environment).first : Speck.current
+    @block = block || lambda {}
   end
   
   ##
