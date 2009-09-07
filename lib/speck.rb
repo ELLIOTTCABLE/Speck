@@ -99,13 +99,13 @@ class Speck
     
     @target = object
     
-    Speck::on(@target) << self
+    Speck::on(@target) << self if @target
   end
   
   ##
   # Creates a new `Speck`.
-  def initialize *environment, object, &block
-    self.target = object
+  def initialize *environment, &block
+    self.target = environment.pop
     
     environment = environment.inject do |prev, curr|
       raise 'pre-existing environment!' if Speck::for(curr).first.environment and Speck::for(curr).first.environment != Speck::for(prev).first
