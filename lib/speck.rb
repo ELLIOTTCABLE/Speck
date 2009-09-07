@@ -108,7 +108,7 @@ class Speck
     self.target = environment.pop
     
     environment = environment.inject do |prev, curr|
-      raise 'pre-existing environment!' if Speck::for(curr).first.environment and Speck::for(curr).first.environment != Speck::for(prev).first
+      raise EnvironmentConflict if Speck::for(curr).first.environment and Speck::for(curr).first.environment != Speck::for(prev).first
       Speck::for(curr).first.environment = Speck::for(prev).first
       curr
     end
@@ -131,6 +131,10 @@ class Speck
   class Exception < StandardError
     # Raised when a `Check` fails
     CheckFailed = Class.new self
+    
+    # Raised when you attempt to stack an environment contrary to the existing
+    # environment
+    EnvironmentConflict = Class.new self
   end
   
 end
