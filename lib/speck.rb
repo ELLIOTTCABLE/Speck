@@ -108,7 +108,7 @@ class Speck
     self.target = environment.pop
     
     environment = environment.inject do |prev, curr|
-      raise EnvironmentConflict if Speck::for(curr).first.environment and Speck::for(curr).first.environment != Speck::for(prev).first
+      raise Exception::EnvironmentConflict if Speck::for(curr).first.environment and Speck::for(curr).first.environment != Speck::for(prev).first
       Speck::for(curr).first.environment = Speck::for(prev).first
       curr
     end
