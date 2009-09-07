@@ -5,7 +5,6 @@ require 'speck'
 require 'speck/check'
 
 Speck.new Speck, Speck::Check do |target|
-  Check = Speck::Check
   
   Speck.new Check.instance_method :passed? do
     object = Object.new
