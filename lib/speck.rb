@@ -1,3 +1,5 @@
+require 'it'
+
 # All library files are required at the bottom, because in this unique case we
 # need `Speck` defined before we can use it to `Speck` anything.
 
@@ -114,7 +116,7 @@ class Speck
     end
     
     self.environment = environment ? Speck::for(environment).first : Speck.current
-    @block = block || lambda {}
+    @block = EnvironmentedProc.new &(block || lambda {})
   end
   
   ##
