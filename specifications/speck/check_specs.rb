@@ -1,35 +1,34 @@
-($:.unshift File.expand_path(File.join(
-  File.dirname(__FILE__), 'lib' ))).uniq!
-require 'speck'
+require_relative '../speck_helper'
+
+require 'speck_specs'
 
 require 'speck/check'
-
-Speck.new Speck, Speck::Check do |target|
+Speck::SpeckBattery[Speck] << Speck.new(Speck::Check) do
   
-  Speck.new Check.instance_method :passed? do
+  Speck.new Speck::Check.instance_method :passed? do
     object = Object.new
     
-    Check.new(->{ Check.new {true} }) {|c| c.execute.passed? }
-    Check.new(->{ Check.new {object} }) {|c| c.execute.passed? }
+    Speck::Check.new(->{ Speck::Check.new {true} }) {|c| c.execute.passed? }
+    Speck::Check.new(->{ Speck::Check.new {object} }) {|c| c.execute.passed? }
     
-    Check.new(->{ Check.new {false} }) {|c|
+    Speck::Check.new(->{ Speck::Check.new {false} }) {|c|
       ! c.tap {|c| c.execute rescue nil } .passed? }
-    Check.new(->{ Check.new {nil} }) {|c|
+    Speck::Check.new(->{ Speck::Check.new {nil} }) {|c|
       ! c.tap {|c| c.execute rescue nil } .passed? }
   end
   
-  Speck.new Check.instance_method :initialize do
+  Speck.new Speck::Check.instance_method :initialize do
     my_lambda = ->{}
-    Check.new(->{ Check.new(&my_lambda) }) {|c| c.expectation == my_lambda }
+    Speck::Check.new(->{ Speck::Check.new(&my_lambda) }) {|c| c.expectation == my_lambda }
     
     object = Object.new
-    Check.new(->{ Check.new(my_lambda) {} }) {|c| c.target == my_lambda }
-    Check.new(->{ Check.new(object) {} }) {|c| c.target.call == object }
+    Speck::Check.new(->{ Speck::Check.new(my_lambda) {} }) {|c| c.target == my_lambda }
+    Speck::Check.new(->{ Speck::Check.new(object) {} }) {|c| c.target.call == object }
   end
   
-  Speck.new Check.instance_method :execute do
-    Check.new(->{ Check.new {true} .execute }) {|c| c.passed? }
-    Check.new(->{ ->{ Check.new {false} .execute } }) do |block|
+  Speck.new Speck::Check.instance_method :execute do
+    Speck::Check.new(->{ Speck::Check.new {true} .execute }) {|c| c.passed? }
+    Speck::Check.new(->{ ->{ Speck::Check.new {false} .execute } }) do |block|
       begin
         block.call
         false
@@ -38,14 +37,14 @@ Speck.new Speck, Speck::Check do |target|
       end
     end
     
-    a_check = Check.new {true}
-    Check.new(->{ a_check.execute }) {|rv| rv == a_check }
+    a_check = Speck::Check.new {true}
+    Speck::Check.new(->{ a_check.execute }) {|rv| rv == a_check }
     
     object = Object.new
-    Check.new(->{ Check.new(object) {|passed| @passed = passed } }) {|c|
+    Speck::Check.new(->{ Speck::Check.new(object) {|passed| @passed = passed } }) {|c|
       c.execute; @passed == object }
     
-    Check.new(->{ Check.new(->{ @called = true }) {true} }) {|c|
+    Speck::Check.new(->{ Speck::Check.new(->{ @called = true }) {true} }) {|c|
       c.execute; @called }
   end
   

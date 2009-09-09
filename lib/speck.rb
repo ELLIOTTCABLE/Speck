@@ -139,4 +139,5 @@ class Speck
   
 end
 
+require 'speck/battery'
 require 'speck/check'
