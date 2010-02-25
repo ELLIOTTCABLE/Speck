@@ -4,3 +4,4 @@
   File.dirname(__FILE__), '..', 'lib'   ))).uniq!
 
 require 'speck'
+require 'smock'

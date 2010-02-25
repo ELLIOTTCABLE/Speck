@@ -35,6 +35,13 @@ end
 # = Speck tasks =
 # ===============
 begin
+  ($:.unshift File.expand_path(File.join(
+    File.dirname(__FILE__), '..', 'Slack', 'lib' ))).uniq!
+  ($:.unshift File.expand_path(File.join(
+    File.dirname(__FILE__), '..', 'Spark', 'lib' ))).uniq!
+  ($:.unshift File.expand_path(File.join(
+    File.dirname(__FILE__), '..', 'Smock', 'lib' ))).uniq!
+  
   require 'speck'
   
   task :default => :'speck:run'
