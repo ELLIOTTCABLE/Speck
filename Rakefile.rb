@@ -62,9 +62,6 @@ begin
     end
   end
   
-rescue LoadError
-  desc 'You need the `speck`, `slack`, and `spark` gems to run specks'
-  task :speck
 end
 
 # =======================
