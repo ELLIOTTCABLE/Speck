@@ -52,7 +52,7 @@ begin
         .flatten.each {|f| require f }
       
       playback = lambda do |speck|
-        puts(speck.target.inspect + ':')
+        p speck.target
         speck.execute
         speck.checks.each &:execute
         speck.children.each &playback

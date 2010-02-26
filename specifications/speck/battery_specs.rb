@@ -19,7 +19,6 @@ Speck::SpeckBattery[Speck] << Speck.new(Speck::Battery) do
   end
   
   Speck.new Speck::Battery.instance_method(:<<) do
-    
     battery = Speck::Battery.new
     object =  Object.new
     speck =   Smock.new.target {object}.mock!
