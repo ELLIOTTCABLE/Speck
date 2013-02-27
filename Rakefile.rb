@@ -1,55 +1,16 @@
 ($:.unshift File.expand_path(File.join( File.dirname(__FILE__), 'lib' ))).uniq!
 require 'speck'
 
-# =======================
-# = Gem packaging tasks =
-# =======================
-begin
-  require 'echoe'
-  
-  task :install => :'package:install'
-  task :package => :'package:package'
-  task :manifest => :'package:manifest'
-  namespace :package do
-    Echoe.new('speck', Speck::Version) do |g|
-      g.project = 'speck'
-      g.author = ['elliottcable']
-      g.email = ['Speck@elliottcable.com']
-      g.summary = "Supah-light 'n sexy specking!"
-      g.url = 'http://github.com/elliottcable/speck'
-      g.runtime_dependencies = []
-      g.development_dependencies = ['echoe >= 3.0.2', 'slack', 'spark']
-      g.manifest_name = '.manifest'
-      g.retain_gemspec = true
-      g.rakefile_name = 'Rakefile.rb'
-      g.ignore_pattern = /^\.git\/|^meta\/|\.gemspec/
-    end
-  end
-  
-rescue LoadError
-  desc 'You need the `echoe` gem to package Speck'
-  task :package
-end
-
 # ===============
 # = Speck tasks =
 # ===============
 begin
-  ($:.unshift File.expand_path(File.join(
-    File.dirname(__FILE__), '..', 'Slack', 'lib' ))).uniq!
-  ($:.unshift File.expand_path(File.join(
-    File.dirname(__FILE__), '..', 'Spark', 'lib' ))).uniq!
-  ($:.unshift File.expand_path(File.join(
-    File.dirname(__FILE__), '..', 'Smock', 'lib' ))).uniq!
-  
-  require 'speck'
-  
   task :default => :'speck:run'
+  
   task :speck => :'speck:run'
   namespace :speck do
     task :run do
-      ['specifications/**/*_specs.rb', 'lib/**/*.rb'].map {|p| Dir.glob(p) }
-        .flatten.each {|f| require f }
+      Dir['./specifications/**/*_specs.rb'].each {|f| require f }
       
       playback = lambda do |speck|
         p speck.target
@@ -61,7 +22,6 @@ begin
       Speck::unbound.each &playback
     end
   end
-  
 end
 
 # =======================
@@ -90,9 +50,15 @@ rescue LoadError
   task :documentation
 end
 
+
+namespace :package do
+  task :package do; system "gem build " + Dir['*.gemspec'].first; end
+  task :install => :package do; system "gem install " + Dir['*.gem'].first; end
+end
+
 desc 'Check everything over before commiting'
 task :aok => [:'documentation:generate', :'documentation:open',
-              :'package:manifest', :'package:package',
+              :'package:package',
               :'speck:run']
 
 task :ci => [:'documentation:generate', :'speck:run']

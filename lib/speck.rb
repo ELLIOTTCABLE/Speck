@@ -2,7 +2,7 @@
 # need `Speck` defined before we can use it to `Speck` anything.
 
 class Speck
-  Version = 0
+  VERSION = 1
   
   class <<self
     
