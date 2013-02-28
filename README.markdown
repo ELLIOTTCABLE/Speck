@@ -79,4 +79,4 @@ License
 This project is licensed very openly for your use, under a variation of the ‘MIT license.’
 Details are available in [LICENSE][].
   
-  [LICENSE]: <./blob/master/LICENSE.text>
+  [LICENSE]: <./LICENSE.text>
