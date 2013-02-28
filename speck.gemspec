@@ -15,4 +15,7 @@ Gem::Specification.new do |gem|
    SUMMARY
    
    gem.files = Dir['lib/**/*'] + %w[README.markdown LICENSE.text] & `git ls-files -z`.split("\0")
+   
+   gem.add_development_dependency 'yard', ">= 0.8.5.2"
+   gem.add_development_dependency 'maruku', ">= 0.6.1"
 end
